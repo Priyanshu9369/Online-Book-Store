@@ -27,6 +27,7 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
+            .cors(cors -> {})
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated()
@@ -38,4 +39,31 @@ public class SecurityConfig {
 
         return http.build();
     }
+    @Bean
+public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+
+    org.springframework.web.cors.CorsConfiguration configuration =
+            new org.springframework.web.cors.CorsConfiguration();
+
+    configuration.setAllowedOrigins(
+            java.util.List.of("http://127.0.0.1:5500")
+    );
+
+    configuration.setAllowedMethods(
+            java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+    );
+
+    configuration.setAllowedHeaders(
+            java.util.List.of("*")
+    );
+
+    configuration.setAllowCredentials(false);
+
+    org.springframework.web.cors.UrlBasedCorsConfigurationSource source =
+            new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
+}
 }

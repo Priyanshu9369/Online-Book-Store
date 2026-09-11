@@ -1,5 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Sample book data
+        // Get JWT token
+    const token = localStorage.getItem('token');
+
+    // Test protected Books API
+    fetch('http://localhost:8080/api/books', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log('Books API Response:', data);
+    })
+    .catch(error => {
+        console.error('Books API Error:', error);
+    });
     const books = [
         {
             id: 1,
