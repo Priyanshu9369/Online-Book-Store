@@ -233,26 +233,45 @@
             <button class="auth-tab" id="register-tab">Register</button>
         </div>
 
-        <!-- Login Form -->
-        <form class="auth-form active" id="login-form">
-            <div class="form-group">
-                <label for="login-email">Email</label>
-                <input type="email" id="login-email" required placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-                <label for="login-password">Password</label>
-                <input type="password" id="login-password" required placeholder="••••••••">
-                <a href="#" class="forgot-password">Forgot password?</a>
-            </div>
-            <div class="remember-me">
-                <input type="checkbox" id="remember-me">
-                <label for="remember-me">Remember me</label>
-            </div>
-            <button type="submit" class="btn">Login</button>
-            <div class="auth-footer">
-                <p>Don't have an account? <a href="#" id="switch-to-register">Register here</a></p>
-            </div>
-        </form>
+       <!-- Login Form -->
+<form class="auth-form active" id="login-form">
+
+    <div class="form-group">
+        <label for="login-email">Email</label>
+        <input
+            type="email"
+            id="login-email"
+            required
+            placeholder="your@email.com"
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="login-password">Password</label>
+        <input
+            type="password"
+            id="login-password"
+            required
+            placeholder="••••••••"
+        >
+        <a href="#" class="forgot-password">Forgot password?</a>
+    </div>
+
+    <div class="remember-me">
+        <input type="checkbox" id="remember-me">
+        <label for="remember-me">Remember me</label>
+    </div>
+
+    <button type="submit" class="btn">Login</button>
+
+    <div class="auth-footer">
+        <p>
+            Don't have an account?
+            <a href="#" id="switch-to-register">Register here</a>
+        </p>
+    </div>
+
+</form>
 
         <!-- Registration Form -->
         <form class="auth-form" id="register-form">
@@ -334,98 +353,128 @@
             switchToRegister.addEventListener('click', showRegister);
             switchToLogin.addEventListener('click', showLogin);
 
-            // Login form submission
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                const rememberMe = document.getElementById('remember-me').checked;
-                
-                // Basic validation
-                if (!email || !password) {
-                    showMessage('error', 'Please fill in all fields');
-                    return;
-                }
-                
-                // Check credentials (in real app, this would be a server call)
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                const user = users.find(u => u.email === email && u.password === password);
-                
-                if (user) {
-                    // Store login state
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                    if (rememberMe) {
-                        localStorage.setItem('rememberedEmail', email);
-                    } else {
-                        localStorage.removeItem('rememberedEmail');
-                    }
-                    
-                    showMessage('success', 'Login successful! Redirecting...');
-                    
-                    // Redirect to home page
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1500);
-                } else {
-                    showMessage('error', 'Invalid email or password');
-                }
-            });
+           // Login form submission
+loginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-            // Registration form submission
-            registerForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const name = document.getElementById('register-name').value;
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                const confirmPassword = document.getElementById('register-confirm-password').value;
-                
-                // Validation
-                if (!name || !email || !password || !confirmPassword) {
-                    showMessage('error', 'Please fill in all fields');
-                    return;
-                }
-                
-                if (password.length < 8) {
-                    showMessage('error', 'Password must be at least 8 characters');
-                    return;
-                }
-                
-                if (password !== confirmPassword) {
-                    showMessage('error', 'Passwords do not match');
-                    return;
-                }
-                
-                // Check if user already exists
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                if (users.some(u => u.email === email)) {
-                    showMessage('error', 'Email already registered');
-                    return;
-                }
-                
-                // Create new user
-                const newUser = {
-                    name,
-                    email,
-                    password
-                };
-                
-                users.push(newUser);
-                localStorage.setItem('users', JSON.stringify(users));
-                showMessage('success', 'Registration successful! Please login.');
-                
-                // Switch to login form and pre-fill email
-                showLogin();
-                document.getElementById('login-email').value = email;
-            });
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const rememberMe = document.getElementById('remember-me').checked;
 
-            // Check for remembered email
-            if (localStorage.getItem('rememberedEmail')) {
-                document.getElementById('login-email').value = localStorage.getItem('rememberedEmail');
-                document.getElementById('remember-me').checked = true;
-            }
+    // Basic validation
+    if (!email || !password) {
+        showMessage('error', 'Please fill in all fields');
+        return;
+    }
+
+    try {
+        // Backend login API call
+        const response = await fetch('http://localhost:8080/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
         });
+
+        // Backend response read karo
+        const data = await response.text();
+
+        // Login failed
+        if (!response.ok) {
+            showMessage('error', data || 'Invalid email or password');
+            return;
+        }
+
+        // JWT token store karo
+        localStorage.setItem('token', data);
+
+        // Remember Me
+        if (rememberMe) {
+            localStorage.setItem('rememberedEmail', email);
+        } else {
+            localStorage.removeItem('rememberedEmail');
+        }
+
+        showMessage('success', 'Login successful! Redirecting...');
+
+        // Home page par redirect
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
+
+    } catch (error) {
+        console.error('Login error:', error);
+
+        showMessage(
+            'error',
+            'Unable to connect to server. Please try again.'
+        );
+    }
+});
+// Registration form submission
+registerForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('register-name').value.trim();
+    const email = document.getElementById('register-email').value.trim();
+    const password = document.getElementById('register-password').value;
+    const confirmPassword = document.getElementById('register-confirm-password').value;
+
+    if (!name || !email || !password || !confirmPassword) {
+        showMessage('error', 'Please fill in all fields');
+        return;
+    }
+
+    if (password.length < 8) {
+        showMessage('error', 'Password must be at least 8 characters');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        showMessage('error', 'Passwords do not match');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:8080/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showMessage('error', data || 'Registration failed');
+            return;
+        }
+
+        showMessage('success', 'Registration successful! Please login.');
+
+        showLogin();
+
+        document.getElementById('login-email').value = email;
+
+    } catch (error) {
+        console.error('Registration error:', error);
+
+        showMessage(
+            'error',
+            'Unable to connect to server. Please try again.'
+        );
+    }
+});
+});
     </script>
 </body>
-</html>
+</html> 
