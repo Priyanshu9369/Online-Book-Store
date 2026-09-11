@@ -31,4 +31,17 @@ public class JwtService {
                 .signWith(key)
                 .compact();
     }
+    public String extractEmail(String token) {
+
+    SecretKey key = Keys.hmacShaKeyFor(
+            secret.getBytes(StandardCharsets.UTF_8)
+    );
+
+    return Jwts.parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .getSubject();
+}
 }
