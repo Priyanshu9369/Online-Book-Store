@@ -1,5 +1,6 @@
 package com.bookstore.bookstore_backend.controller;
 
+import com.bookstore.bookstore_backend.dto.LoginRequest;
 import com.bookstore.bookstore_backend.dto.RegisterRequest;
 import com.bookstore.bookstore_backend.dto.UserResponse;
 import com.bookstore.bookstore_backend.entity.User;
@@ -49,6 +50,33 @@ public class AuthController {
 
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+
+        try {
+            // Email aur password ko service ke paas bhej rahe hain
+            User user = userService.loginUser(
+                    request.getEmail(),
+                    request.getPassword()
+            );
+
+            // Password response mein nahi bhejna hai
+            UserResponse response = new UserResponse(
+                    user.getId(),
+                    user.getName(),
+                    user.getEmail()
+            );
+
+            return ResponseEntity.ok(response);
+
+        } catch (RuntimeException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
                     .body(e.getMessage());
         }
     }

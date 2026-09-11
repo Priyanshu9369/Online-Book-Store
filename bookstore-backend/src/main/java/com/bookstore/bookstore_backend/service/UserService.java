@@ -16,7 +16,20 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+public User loginUser(String email, String password) {
 
+    // Email se user database mein find karo
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+
+    // Entered password ko database ke BCrypt password se compare karo
+    if (!passwordEncoder.matches(password, user.getPassword())) {
+        throw new RuntimeException("Invalid email or password");
+    }
+
+    // Login successful
+    return user;
+}
     public User registerUser(User user) {
 
         // Check if email already exists
