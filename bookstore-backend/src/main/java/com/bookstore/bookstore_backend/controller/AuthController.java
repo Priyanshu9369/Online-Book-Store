@@ -4,6 +4,7 @@ import com.bookstore.bookstore_backend.dto.LoginRequest;
 import com.bookstore.bookstore_backend.dto.RegisterRequest;
 import com.bookstore.bookstore_backend.dto.UserResponse;
 import com.bookstore.bookstore_backend.entity.User;
+import com.bookstore.bookstore_backend.service.JwtService;
 import com.bookstore.bookstore_backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
+    private final JwtService jwtService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, JwtService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/register")
@@ -34,8 +37,7 @@ public class AuthController {
             // UserService password ko BCrypt se hash karke database mein save karega
             User registeredUser = userService.registerUser(user);
 
-            // Response DTO banayenge
-            // Isme password intentionally nahi hai
+            // Password response mein nahi bhejna hai
             UserResponse response = new UserResponse(
                     registeredUser.getId(),
                     registeredUser.getName(),
@@ -58,20 +60,17 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
         try {
-            // Email aur password ko service ke paas bhej rahe hain
+            // Email aur password verify kar rahe hain
             User user = userService.loginUser(
                     request.getEmail(),
                     request.getPassword()
             );
 
-            // Password response mein nahi bhejna hai
-            UserResponse response = new UserResponse(
-                    user.getId(),
-                    user.getName(),
-                    user.getEmail()
-            );
+            // Login successful hone par JWT token generate hoga
+            String token = jwtService.generateToken(user.getEmail());
 
-            return ResponseEntity.ok(response);
+            // Token frontend ko return karenge
+            return ResponseEntity.ok(token);
 
         } catch (RuntimeException e) {
 
