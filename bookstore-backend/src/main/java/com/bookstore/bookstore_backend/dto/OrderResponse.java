@@ -1,5 +1,7 @@
 package com.bookstore.bookstore_backend.dto;
 
+import java.util.List;
+
 public class OrderResponse {
 
     private Long id;
@@ -14,6 +16,8 @@ public class OrderResponse {
     private String state;
     private String pincode;
 
+    private List<OrderItemResponse> items;
+
     public OrderResponse() {
     }
 
@@ -27,7 +31,8 @@ public class OrderResponse {
             String address,
             String city,
             String state,
-            String pincode) {
+            String pincode,
+            List<OrderItemResponse> items) {
 
         this.id = id;
         this.totalAmount = totalAmount;
@@ -39,6 +44,7 @@ public class OrderResponse {
         this.city = city;
         this.state = state;
         this.pincode = pincode;
+        this.items = items;
     }
 
     public Long getId() {
@@ -79,5 +85,9 @@ public class OrderResponse {
 
     public String getPincode() {
         return pincode;
+    }
+
+    public List<OrderItemResponse> getItems() {
+        return items;
     }
 }

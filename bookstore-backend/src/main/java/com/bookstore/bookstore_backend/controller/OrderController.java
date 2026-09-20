@@ -1,8 +1,10 @@
 package com.bookstore.bookstore_backend.controller;
 
+import com.bookstore.bookstore_backend.dto.OrderItemResponse;
 import com.bookstore.bookstore_backend.dto.OrderResponse;
 import com.bookstore.bookstore_backend.entity.Address;
 import com.bookstore.bookstore_backend.entity.Order;
+import com.bookstore.bookstore_backend.entity.OrderItem;
 import com.bookstore.bookstore_backend.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -61,6 +63,12 @@ public class OrderController {
 
         Address address = order.getAddress();
 
+        List<OrderItemResponse> items = orderService
+                .getOrderItems(order.getId())
+                .stream()
+                .map(this::toItemResponse)
+                .toList();
+
         return new OrderResponse(
                 order.getId(),
                 order.getTotalAmount(),
@@ -71,7 +79,20 @@ public class OrderController {
                 address.getAddress(),
                 address.getCity(),
                 address.getState(),
-                address.getPincode()
+                address.getPincode(),
+                items
+        );
+    }
+
+    private OrderItemResponse toItemResponse(OrderItem orderItem) {
+
+        return new OrderItemResponse(
+                orderItem.getBook().getId(),
+                orderItem.getBook().getTitle(),
+                orderItem.getBook().getAuthor(),
+                orderItem.getBook().getImage(),
+                orderItem.getQuantity(),
+                orderItem.getPrice()
         );
     }
 }
