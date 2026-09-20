@@ -73,5 +73,17 @@ public CartItem updateQuantity(String email, Long cartItemId, int quantity) {
     cartItem.setQuantity(quantity);
 
     return cartItemRepository.save(cartItem);
+    
+}
+public void removeFromCart(String email, Long cartItemId) {
+
+    CartItem cartItem = cartItemRepository.findById(cartItemId)
+            .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+    if (!cartItem.getCart().getUser().getEmail().equals(email)) {
+        throw new RuntimeException("You cannot remove this cart item");
+    }
+
+    cartItemRepository.delete(cartItem);
 }
 }

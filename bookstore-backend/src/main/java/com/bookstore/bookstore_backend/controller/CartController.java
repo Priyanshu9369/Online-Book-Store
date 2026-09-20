@@ -122,4 +122,24 @@ public class CartController {
                     .body(e.getMessage());
         }
     }
+    @DeleteMapping("/remove/{cartItemId}")
+public ResponseEntity<?> removeFromCart(
+        @PathVariable Long cartItemId,
+        Authentication authentication) {
+
+    try {
+        String email = authentication.getName();
+
+        cartService.removeFromCart(
+                email,
+                cartItemId
+        );
+
+        return ResponseEntity.ok("Cart item removed successfully");
+
+    } catch (RuntimeException e) {
+        return ResponseEntity.badRequest()
+                .body(e.getMessage());
+    }
+}
 }
