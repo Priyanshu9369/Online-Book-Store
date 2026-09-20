@@ -54,4 +54,49 @@ public class AddressService {
 
         return addressRepository.findByUser(user);
     }
+
+    public Address updateAddress(
+            String email,
+            Long addressId,
+            String fullName,
+            String phone,
+            String address,
+            String city,
+            String state,
+            String pincode) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Address existingAddress = addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("Address not found"));
+
+        if (!existingAddress.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("You cannot update this address");
+        }
+
+        existingAddress.setFullName(fullName);
+        existingAddress.setPhone(phone);
+        existingAddress.setAddress(address);
+        existingAddress.setCity(city);
+        existingAddress.setState(state);
+        existingAddress.setPincode(pincode);
+
+        return addressRepository.save(existingAddress);
+    }
+
+    public void deleteAddress(String email, Long addressId) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Address existingAddress = addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("Address not found"));
+
+        if (!existingAddress.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("You cannot delete this address");
+        }
+
+        addressRepository.delete(existingAddress);
+    }
 }

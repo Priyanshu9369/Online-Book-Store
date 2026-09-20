@@ -43,17 +43,7 @@ public class AddressController {
                     pincode
             );
 
-            AddressResponse response = new AddressResponse(
-                    savedAddress.getId(),
-                    savedAddress.getFullName(),
-                    savedAddress.getPhone(),
-                    savedAddress.getAddress(),
-                    savedAddress.getCity(),
-                    savedAddress.getState(),
-                    savedAddress.getPincode()
-            );
-
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(toResponse(savedAddress));
 
         } catch (RuntimeException e) {
             return ResponseEntity
@@ -71,17 +61,75 @@ public class AddressController {
         List<AddressResponse> response =
                 addressService.getUserAddresses(email)
                         .stream()
-                        .map(address -> new AddressResponse(
-                                address.getId(),
-                                address.getFullName(),
-                                address.getPhone(),
-                                address.getAddress(),
-                                address.getCity(),
-                                address.getState(),
-                                address.getPincode()
-                        ))
+                        .map(this::toResponse)
                         .toList();
 
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{addressId}")
+    public ResponseEntity<?> updateAddress(
+            @PathVariable Long addressId,
+            @RequestParam String fullName,
+            @RequestParam String phone,
+            @RequestParam String address,
+            @RequestParam String city,
+            @RequestParam String state,
+            @RequestParam String pincode,
+            Authentication authentication) {
+
+        try {
+            String email = authentication.getName();
+
+            Address updatedAddress = addressService.updateAddress(
+                    email,
+                    addressId,
+                    fullName,
+                    phone,
+                    address,
+                    city,
+                    state,
+                    pincode
+            );
+
+            return ResponseEntity.ok(toResponse(updatedAddress));
+
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{addressId}")
+    public ResponseEntity<?> deleteAddress(
+            @PathVariable Long addressId,
+            Authentication authentication) {
+
+        try {
+            String email = authentication.getName();
+
+            addressService.deleteAddress(email, addressId);
+
+            return ResponseEntity.ok("Address deleted successfully");
+
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    private AddressResponse toResponse(Address address) {
+
+        return new AddressResponse(
+                address.getId(),
+                address.getFullName(),
+                address.getPhone(),
+                address.getAddress(),
+                address.getCity(),
+                address.getState(),
+                address.getPincode()
+        );
     }
 }
