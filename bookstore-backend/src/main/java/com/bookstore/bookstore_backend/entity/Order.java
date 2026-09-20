@@ -14,6 +14,10 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
+
     @Column(nullable = false)
     private double totalAmount;
 
@@ -23,8 +27,14 @@ public class Order {
     public Order() {
     }
 
-    public Order(User user, double totalAmount, String status) {
+    public Order(
+            User user,
+            Address address,
+            double totalAmount,
+            String status) {
+
         this.user = user;
+        this.address = address;
         this.totalAmount = totalAmount;
         this.status = status;
     }
@@ -43,6 +53,14 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public double getTotalAmount() {
