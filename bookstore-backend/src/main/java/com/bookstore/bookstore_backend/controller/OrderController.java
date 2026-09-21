@@ -36,6 +36,27 @@ public class OrderController {
 
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/{orderId}")
+public ResponseEntity<?> getOrderById(
+        @PathVariable Long orderId,
+        Authentication authentication) {
+
+    try {
+        String email = authentication.getName();
+
+        Order order = orderService.getOrderById(
+                email,
+                orderId
+        );
+
+        return ResponseEntity.ok(toResponse(order));
+
+    } catch (RuntimeException e) {
+        return ResponseEntity
+                .status(404)
+                .body(e.getMessage());
+    }
+}
 
     @PostMapping("/place")
     public ResponseEntity<?> placeOrder(

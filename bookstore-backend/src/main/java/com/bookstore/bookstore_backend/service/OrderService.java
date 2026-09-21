@@ -57,6 +57,14 @@ public class OrderService {
 
     return orderItemRepository.findByOrder(order);
 }
+public Order getOrderById(String email, Long orderId) {
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    return orderRepository.findByIdAndUser(orderId, user)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+}
 
     @Transactional
     public Order placeOrder(String email, Long addressId) {
