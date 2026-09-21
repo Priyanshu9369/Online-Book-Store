@@ -110,11 +110,22 @@ public Order cancelOrder(String email, Long orderId) {
 
         double totalAmount = 0;
 
-        for (CartItem cartItem : cartItems) {
-            totalAmount +=
-                    cartItem.getBook().getPrice()
-                    * cartItem.getQuantity();
-        }
+for (CartItem cartItem : cartItems) {
+
+    int stock = cartItem.getBook().getStockQuantity();
+    int requestedQuantity = cartItem.getQuantity();
+
+    if (stock < requestedQuantity) {
+        throw new RuntimeException(
+                "Not enough stock for book: "
+                + cartItem.getBook().getTitle()
+        );
+    }
+
+    totalAmount +=
+            cartItem.getBook().getPrice()
+            * requestedQuantity;
+}
 
         Order order = new Order(
                 user,
@@ -127,16 +138,21 @@ public Order cancelOrder(String email, Long orderId) {
 
         for (CartItem cartItem : cartItems) {
 
-            OrderItem orderItem = new OrderItem(
-                    savedOrder,
-                    cartItem.getBook(),
-                    cartItem.getQuantity(),
-                    cartItem.getBook().getPrice()
-            );
+    OrderItem orderItem = new OrderItem(
+            savedOrder,
+            cartItem.getBook(),
+            cartItem.getQuantity(),
+            cartItem.getBook().getPrice()
+    );
 
-            orderItemRepository.save(orderItem);
-        }
+    orderItemRepository.save(orderItem);
 
+    int newStock =
+            cartItem.getBook().getStockQuantity()
+            - cartItem.getQuantity();
+
+    cartItem.getBook().setStockQuantity(newStock);
+}
         cartItemRepository.deleteAll(cartItems);
 
         return savedOrder;

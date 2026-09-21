@@ -25,6 +25,9 @@ public class Book {
     @Column(length = 2000)
     private String description;
 
+    @Column(nullable = false)
+    private int stockQuantity;
+
     public Book() {
     }
 
@@ -35,7 +38,8 @@ public class Book {
             String image,
             String category,
             double rating,
-            String description
+            String description,
+            int stockQuantity
     ) {
         this.title = title;
         this.author = author;
@@ -44,6 +48,7 @@ public class Book {
         this.category = category;
         this.rating = rating;
         this.description = description;
+        this.stockQuantity = stockQuantity;
     }
 
     public Long getId() {
@@ -108,5 +113,13 @@ public class Book {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 }
