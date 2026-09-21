@@ -50,6 +50,7 @@ public class OrderService {
 
         return orderRepository.findByUser(user);
     }
+
     public List<OrderItem> getOrderItems(Long orderId) {
 
     Order order = orderRepository.findById(orderId)
@@ -57,6 +58,7 @@ public class OrderService {
 
     return orderItemRepository.findByOrder(order);
 }
+
 public Order getOrderById(String email, Long orderId) {
 
     User user = userRepository.findByEmail(email)
@@ -64,6 +66,24 @@ public Order getOrderById(String email, Long orderId) {
 
     return orderRepository.findByIdAndUser(orderId, user)
             .orElseThrow(() -> new RuntimeException("Order not found"));
+}
+public Order cancelOrder(String email, Long orderId) {
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    Order order = orderRepository.findByIdAndUser(orderId, user)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    if (!"PLACED".equals(order.getStatus())) {
+        throw new RuntimeException(
+                "Order cannot be cancelled in current status"
+        );
+    }
+
+    order.setStatus("CANCELLED");
+
+    return orderRepository.save(order);
 }
 
     @Transactional

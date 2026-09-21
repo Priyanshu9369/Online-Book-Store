@@ -57,6 +57,27 @@ public ResponseEntity<?> getOrderById(
                 .body(e.getMessage());
     }
 }
+    @PutMapping("/{orderId}/cancel")
+public ResponseEntity<?> cancelOrder(
+        @PathVariable Long orderId,
+        Authentication authentication) {
+
+    try {
+        String email = authentication.getName();
+
+        Order order = orderService.cancelOrder(
+                email,
+                orderId
+        );
+
+        return ResponseEntity.ok(toResponse(order));
+
+    } catch (RuntimeException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(e.getMessage());
+    }
+}
 
     @PostMapping("/place")
     public ResponseEntity<?> placeOrder(
