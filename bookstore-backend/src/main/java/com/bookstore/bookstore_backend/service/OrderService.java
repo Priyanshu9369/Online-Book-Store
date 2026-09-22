@@ -50,7 +50,9 @@ public class OrderService {
 
         return orderRepository.findByUser(user);
     }
-
+public List<Order> getAllOrders() {
+    return orderRepository.findAll();
+}
     public List<OrderItem> getOrderItems(Long orderId) {
 
     Order order = orderRepository.findById(orderId)

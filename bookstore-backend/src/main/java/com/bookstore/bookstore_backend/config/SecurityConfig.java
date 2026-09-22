@@ -32,6 +32,7 @@ public class SecurityConfig {
 
                 // Login / Register public
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/orders/admin").hasRole("ADMIN")
 
                 // Book read APIs - logged-in users
                 .requestMatchers(

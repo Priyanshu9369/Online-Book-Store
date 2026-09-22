@@ -36,6 +36,16 @@ public class OrderController {
 
         return ResponseEntity.ok(response);
     }
+    @GetMapping("/admin")
+public ResponseEntity<List<OrderResponse>> getAllOrders() {
+
+    List<OrderResponse> response = orderService.getAllOrders()
+            .stream()
+            .map(this::toResponse)
+            .toList();
+
+    return ResponseEntity.ok(response);
+}
     @GetMapping("/{orderId}")
 public ResponseEntity<?> getOrderById(
         @PathVariable Long orderId,
