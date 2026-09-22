@@ -46,6 +46,27 @@ public ResponseEntity<List<OrderResponse>> getAllOrders() {
 
     return ResponseEntity.ok(response);
 }
+@PutMapping("/admin/{orderId}/status")
+public ResponseEntity<?> updateOrderStatus(
+        @PathVariable Long orderId,
+        @RequestParam String status) {
+
+    try {
+
+        Order order = orderService.updateOrderStatus(
+                orderId,
+                status
+        );
+
+        return ResponseEntity.ok(toResponse(order));
+
+    } catch (RuntimeException e) {
+
+        return ResponseEntity
+                .badRequest()
+                .body(e.getMessage());
+    }
+}
     @GetMapping("/{orderId}")
 public ResponseEntity<?> getOrderById(
         @PathVariable Long orderId,

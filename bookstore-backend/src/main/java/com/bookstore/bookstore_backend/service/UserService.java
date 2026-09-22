@@ -44,4 +44,5 @@ public User loginUser(String email, String password) {
         // Save user in database
         return userRepository.save(user);
     }
+    
 }

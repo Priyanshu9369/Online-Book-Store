@@ -53,6 +53,15 @@ public class OrderService {
 public List<Order> getAllOrders() {
     return orderRepository.findAll();
 }
+public Order updateOrderStatus(Long orderId, String status) {
+
+    Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    order.setStatus(status);
+
+    return orderRepository.save(order);
+}
     public List<OrderItem> getOrderItems(Long orderId) {
 
     Order order = orderRepository.findById(orderId)
