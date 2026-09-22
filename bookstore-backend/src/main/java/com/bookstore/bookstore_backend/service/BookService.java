@@ -28,7 +28,25 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    public Book updateBook(Long id, Book updatedBook) {
+
+        Book existingBook = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        existingBook.setTitle(updatedBook.getTitle());
+        existingBook.setAuthor(updatedBook.getAuthor());
+        existingBook.setPrice(updatedBook.getPrice());
+        existingBook.setImage(updatedBook.getImage());
+        existingBook.setCategory(updatedBook.getCategory());
+        existingBook.setRating(updatedBook.getRating());
+        existingBook.setDescription(updatedBook.getDescription());
+        existingBook.setStockQuantity(updatedBook.getStockQuantity());
+
+        return bookRepository.save(existingBook);
+    }
+
     public void deleteBook(Long id) {
+
         if (!bookRepository.existsById(id)) {
             throw new RuntimeException("Book not found");
         }
