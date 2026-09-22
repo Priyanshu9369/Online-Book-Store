@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Book Haven - Admin Dashboard</title>
+
+    <link rel="stylesheet" href="admin.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <header class="admin-header">
+
+        <div class="logo">
+            <i class="fas fa-book-open"></i>
+            <h1>Book Haven Admin</h1>
+        </div>
+
+        <div class="admin-user">
+            <span>
+                <i class="fas fa-user-shield"></i>
+                Admin
+            </span>
+
+            <button id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+
+    </header>
+
+
+    <main class="admin-container">
+
+        <section class="dashboard-heading">
+            <h2>Admin Dashboard</h2>
+            <p>Manage books, stock and customer orders.</p>
+        </section>
+
+
+        <section class="dashboard-cards">
+
+            <div class="dashboard-card">
+                <i class="fas fa-book"></i>
+                <div>
+                    <h3>Books</h3>
+                    <p id="book-count">0</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <i class="fas fa-shopping-bag"></i>
+                <div>
+                    <h3>Orders</h3>
+                    <p id="order-count">0</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <i class="fas fa-box"></i>
+                <div>
+                    <h3>Low Stock</h3>
+                    <p id="low-stock-count">0</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <section class="admin-section">
+
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-book"></i>
+                    Book Management
+                </h2>
+
+                <button class="admin-btn" id="add-book-btn">
+                    <i class="fas fa-plus"></i>
+                    Add Book
+                </button>
+            </div>
+
+            <div id="books-table-container">
+                <!-- Books table will be loaded here -->
+            </div>
+
+        </section>
+
+
+        <section class="admin-section">
+
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-shopping-cart"></i>
+                    Order Management
+                </h2>
+            </div>
+
+            <div id="orders-table-container">
+                <!-- Orders table will be loaded here -->
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="admin.js"></script>
+
+</body>
+</html>
