@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -10,6 +11,7 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 
 <body>
@@ -22,6 +24,7 @@
         </div>
 
         <div class="admin-user">
+
             <span>
                 <i class="fas fa-user-shield"></i>
                 Admin
@@ -31,6 +34,7 @@
                 <i class="fas fa-sign-out-alt"></i>
                 Logout
             </button>
+
         </div>
 
     </header>
@@ -39,35 +43,49 @@
     <main class="admin-container">
 
         <section class="dashboard-heading">
+
             <h2>Admin Dashboard</h2>
+
             <p>Manage books, stock and customer orders.</p>
+
         </section>
 
 
         <section class="dashboard-cards">
 
             <div class="dashboard-card">
+
                 <i class="fas fa-book"></i>
+
                 <div>
                     <h3>Books</h3>
                     <p id="book-count">0</p>
                 </div>
+
             </div>
 
+
             <div class="dashboard-card">
+
                 <i class="fas fa-shopping-bag"></i>
+
                 <div>
                     <h3>Orders</h3>
                     <p id="order-count">0</p>
                 </div>
+
             </div>
 
+
             <div class="dashboard-card">
+
                 <i class="fas fa-box"></i>
+
                 <div>
                     <h3>Low Stock</h3>
                     <p id="low-stock-count">0</p>
                 </div>
+
             </div>
 
         </section>
@@ -76,16 +94,21 @@
         <section class="admin-section">
 
             <div class="section-header">
+
                 <h2>
                     <i class="fas fa-book"></i>
                     Book Management
                 </h2>
 
                 <button class="admin-btn" id="add-book-btn">
+
                     <i class="fas fa-plus"></i>
                     Add Book
+
                 </button>
+
             </div>
+
 
             <div id="books-table-container">
                 <!-- Books table will be loaded here -->
@@ -97,11 +120,14 @@
         <section class="admin-section">
 
             <div class="section-header">
+
                 <h2>
                     <i class="fas fa-shopping-cart"></i>
                     Order Management
                 </h2>
+
             </div>
+
 
             <div id="orders-table-container">
                 <!-- Orders table will be loaded here -->
@@ -110,6 +136,190 @@
         </section>
 
     </main>
+
+
+    <!-- Book Form Modal -->
+
+    <div id="book-modal" class="modal">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2 id="book-modal-title">Add Book</h2>
+
+                <button type="button" id="close-book-modal">
+                    &times;
+                </button>
+
+            </div>
+
+
+            <form id="book-form">
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="book-title">
+                            Book Title
+                        </label>
+
+                        <input
+                            type="text"
+                            id="book-title"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="book-author">
+                            Author
+                        </label>
+
+                        <input
+                            type="text"
+                            id="book-author"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="book-price">
+                            Price
+                        </label>
+
+                        <input
+                            type="number"
+                            id="book-price"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="book-stock">
+                            Stock Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            id="book-stock"
+                            min="0"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="book-category">
+                            Category
+                        </label>
+
+                        <input
+                            type="text"
+                            id="book-category"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="book-rating">
+                            Rating
+                        </label>
+
+                        <input
+                            type="number"
+                            id="book-rating"
+                            step="0.1"
+                            min="0"
+                            max="5"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="book-image">
+                        Image URL
+                    </label>
+
+                    <input
+                        type="url"
+                        id="book-image"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="book-description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="book-description"
+                        rows="4"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        id="cancel-book-btn"
+                        class="cancel-btn"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="save-btn"
+                    >
+                        Save Book
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
 
 
     <script src="admin.js"></script>
