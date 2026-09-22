@@ -29,7 +29,33 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> {})
             .authorizeHttpRequests(auth -> auth
+
+                // Login / Register public
                 .requestMatchers("/api/auth/**").permitAll()
+
+                // Book read APIs - logged-in users
+                .requestMatchers(
+                        org.springframework.http.HttpMethod.GET,
+                        "/api/books/**"
+                ).authenticated()
+
+                // Book management - ADMIN only
+                .requestMatchers(
+                        org.springframework.http.HttpMethod.POST,
+                        "/api/books/**"
+                ).hasRole("ADMIN")
+
+                .requestMatchers(
+                        org.springframework.http.HttpMethod.PUT,
+                        "/api/books/**"
+                ).hasRole("ADMIN")
+
+                .requestMatchers(
+                        org.springframework.http.HttpMethod.DELETE,
+                        "/api/books/**"
+                ).hasRole("ADMIN")
+
+                // Everything else requires login
                 .anyRequest().authenticated()
             )
             .addFilterBefore(
@@ -39,31 +65,32 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
-public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
 
-    org.springframework.web.cors.CorsConfiguration configuration =
-            new org.springframework.web.cors.CorsConfiguration();
+        org.springframework.web.cors.CorsConfiguration configuration =
+                new org.springframework.web.cors.CorsConfiguration();
 
-    configuration.setAllowedOrigins(
-            java.util.List.of("http://127.0.0.1:5500")
-    );
+        configuration.setAllowedOrigins(
+                java.util.List.of("http://127.0.0.1:5500")
+        );
 
-    configuration.setAllowedMethods(
-            java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
-    );
+        configuration.setAllowedMethods(
+                java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        );
 
-    configuration.setAllowedHeaders(
-            java.util.List.of("*")
-    );
+        configuration.setAllowedHeaders(
+                java.util.List.of("*")
+        );
 
-    configuration.setAllowCredentials(false);
+        configuration.setAllowCredentials(false);
 
-    org.springframework.web.cors.UrlBasedCorsConfigurationSource source =
-            new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        org.springframework.web.cors.UrlBasedCorsConfigurationSource source =
+                new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
 
-    source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);
 
-    return source;
-}
+        return source;
+    }
 }

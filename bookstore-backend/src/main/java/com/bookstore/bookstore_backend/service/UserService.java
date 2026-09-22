@@ -39,6 +39,7 @@ public User loginUser(String email, String password) {
 
         // Hash the password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole("CUSTOMER");
 
         // Save user in database
         return userRepository.save(user);

@@ -67,7 +67,7 @@ public class AuthController {
             );
 
             // Login successful hone par JWT token generate hoga
-            String token = jwtService.generateToken(user.getEmail());
+            String token = jwtService.generateToken(user.getEmail(), user.getRole());
 
             // Token frontend ko return karenge
             return ResponseEntity.ok(token);
